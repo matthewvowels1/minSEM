@@ -1,0 +1,2 @@
+# minSEM
+Graph reduction
