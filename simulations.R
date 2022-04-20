@@ -3,34 +3,34 @@ library(lavaan)
 library(parameters)
 
 set.seed(1)
-sims = 300
+sims = 100
 N = 100000
 
-x <- c("p_val", "se", "coef", "aic", "bic", "df", "cfi", "rmsea", "chisq", "trucoef")
+x <- c("N", "p_val", "se", "coef", "aic", "bic", "df", "cfi", "rmsea", "chisq", "trucoef")
 
-df1_full = data.frame(matrix(ncol = 10, nrow = 0))
+df1_full = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df1_full) <- x
-df1_red = data.frame(matrix(ncol = 10, nrow = 0))
+df1_red = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df1_red) <- x
-df2_full = data.frame(matrix(ncol = 10, nrow = 0))
+df2_full = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df2_full) <- x
-df2_redi = data.frame(matrix(ncol = 10, nrow = 0))
+df2_redi = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df2_redi) <- x
-df2_redii = data.frame(matrix(ncol = 10, nrow = 0))
+df2_redii = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df2_redii) <- x
-df3_full = data.frame(matrix(ncol = 10, nrow = 0))
+df3_full = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df3_full) <- x
-df3_redi = data.frame(matrix(ncol = 10, nrow = 0))
+df3_redi = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df3_redi) <- x
-df3_redii = data.frame(matrix(ncol = 10, nrow = 0))
+df3_redii = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df3_redii) <- x
-df4_full = data.frame(matrix(ncol = 10, nrow = 0))
+df4_full = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df4_full) <- x
-df4_red = data.frame(matrix(ncol = 10, nrow = 0))
+df4_red = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df4_red) <- x
-df5_full = data.frame(matrix(ncol = 10, nrow = 0))
+df5_full = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df5_full) <- x
-df5_red = data.frame(matrix(ncol = 10, nrow = 0))
+df5_red = data.frame(matrix(ncol = 11, nrow = 0))
 colnames(df5_red) <- x
 
 
@@ -189,7 +189,7 @@ ex_5 <- function(N){
 
 
 
-for (N in c(10,20,40,80,160,320, 640, 1280, 2560, 5120, 10240)){
+for (N in c(10,15,20,25,30,35, 40, 45, 50, 60, 70, 80, 90, 100, 120, 140, 160, 200)){
   print(paste("N:", as.character(N)))
 for (i in 1:sims) {
   print(i)
@@ -210,7 +210,7 @@ fms = fitMeasures(full_sem_mod1, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.64
-df1_full[nrow(df1_full) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df1_full[nrow(df1_full) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 
 rem_sem_mod1 = sem(rem_mod1, data=df_ex1)
@@ -224,7 +224,7 @@ fms = fitMeasures(rem_sem_mod1, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.64
-df1_red[nrow(df1_red) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df1_red[nrow(df1_red) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 full_sem_mod2 = sem(full_mod2, data=df_ex2)
 params=model_parameters(full_sem_mod2)
@@ -237,7 +237,7 @@ fms = fitMeasures(full_sem_mod2, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.64
-df2_full[nrow(df2_full) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df2_full[nrow(df2_full) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 
 rem_sem_mod2i = sem(rem_mod2i, data=df_ex2)
@@ -251,7 +251,7 @@ fms = fitMeasures(rem_sem_mod2i, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.64
-df2_redi[nrow(df2_redi) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df2_redi[nrow(df2_redi) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 
 rem_sem_mod2ii = sem(rem_mod2ii, data=df_ex2)
@@ -265,7 +265,7 @@ fms = fitMeasures(rem_sem_mod2ii, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.64
-df2_redii[nrow(df2_redii) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df2_redii[nrow(df2_redii) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 
 full_sem_mod3 = sem(full_mod3, data=df_ex3)
@@ -279,7 +279,7 @@ fms = fitMeasures(full_sem_mod3, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 1.44
-df3_full[nrow(df3_full) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df3_full[nrow(df3_full) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 rem_sem_mod3i = sem(rem_mod3i, data=df_ex3)
 params=model_parameters(rem_sem_mod3i)
@@ -292,7 +292,7 @@ fms = fitMeasures(rem_sem_mod3i, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 1.44
-df3_redi[nrow(df3_redi) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df3_redi[nrow(df3_redi) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 rem_sem_mod3ii = sem(rem_mod3ii, data=df_ex3)
 params=model_parameters(rem_sem_mod3ii)
@@ -305,7 +305,7 @@ fms = fitMeasures(rem_sem_mod3ii, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 1.44
-df3_redii[nrow(df3_redii) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df3_redii[nrow(df3_redii) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 full_sem_mod4 = sem(full_mod4, data=df_ex4)
 params=model_parameters(full_sem_mod4)
@@ -318,7 +318,7 @@ fms = fitMeasures(full_sem_mod4, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.8
-df4_full[nrow(df4_full) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df4_full[nrow(df4_full) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 rem_sem_mod4 = sem(rem_mod4, data=df_ex4)
 params=model_parameters(rem_sem_mod4)
@@ -331,7 +331,7 @@ fms = fitMeasures(rem_sem_mod4, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 0.8
-df4_red[nrow(df4_red) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df4_red[nrow(df4_red) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 full_sem_mod5 = sem(full_mod5, data=df_ex5)
 params=model_parameters(full_sem_mod5)
@@ -344,7 +344,7 @@ fms = fitMeasures(full_sem_mod5, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 1.15
-df5_full[nrow(df5_full) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
+df5_full[nrow(df5_full) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
 
 rem_sem_mod5 = sem(rem_mod5, data=df_ex5)
 params=model_parameters(rem_sem_mod5)
@@ -357,44 +357,42 @@ fms = fitMeasures(rem_sem_mod5, c("df", "cfi","rmsea","chisq"))
 fms = data.frame(fms)
 fms = fms$fms
 trucoef = 1.15
-df5_red[nrow(df5_red) + 1,] = c(p_val, se, coef, aic, bic, fms, trucoef)
-}
+df5_red[nrow(df5_red) + 1,] = c(N, p_val, se, coef, aic, bic, fms, trucoef)
+}}
 
 
-Nstr = as.character(N)
 fn = "_mod1_full.csv"
-write.csv(df1_full, paste(Nstr, fn), row.names=FALSE)
+write.csv(df1_full, fn, row.names=FALSE)
 
 fn = "_mod1_red.csv"
-write.csv(df1_red, paste(Nstr, fn), row.names=FALSE)
+write.csv(df1_red, fn, row.names=FALSE)
 
 fn = "_mod2_full.csv"
-write.csv(df2_full, paste(Nstr, fn), row.names=FALSE)
+write.csv(df2_full, fn, row.names=FALSE)
 
 fn = "_mod2_redi.csv"
-write.csv(df2_redi, paste(Nstr, fn), row.names=FALSE)
+write.csv(df2_redi, fn, row.names=FALSE)
 
 fn = "_mod2_redii.csv"
-write.csv(df2_redii, paste(Nstr, fn), row.names=FALSE)
+write.csv(df2_redii, fn, row.names=FALSE)
 
 fn = "_mod3_full.csv"
-write.csv(df3_full, paste(Nstr, fn), row.names=FALSE)
+write.csv(df3_full, fn, row.names=FALSE)
 
 fn = "_mod3_redi.csv"
-write.csv(df3_redi, paste(Nstr, fn), row.names=FALSE)
+write.csv(df3_redi, fn, row.names=FALSE)
 
 fn = "_mod3_redii.csv"
-write.csv(df3_redii, paste(Nstr, fn), row.names=FALSE)
+write.csv(df3_redii, fn, row.names=FALSE)
 
 fn = "_mod4_full.csv"
-write.csv(df4_full, paste(Nstr, fn), row.names=FALSE)
+write.csv(df4_full, fn, row.names=FALSE)
 
 fn = "_mod4_red.csv"
-write.csv(df4_red, paste(Nstr, fn), row.names=FALSE)
+write.csv(df4_red, fn, row.names=FALSE)
 
 fn = "_mod5_full.csv"
-write.csv(df5_full, paste(Nstr, fn), row.names=FALSE)
+write.csv(df5_full, fn, row.names=FALSE)
 
 fn = "_mod5_red.csv"
-write.csv(df5_red, paste(Nstr, fn), row.names=FALSE)
-}
+write.csv(df5_red, fn, row.names=FALSE)
