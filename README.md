@@ -7,12 +7,16 @@ Graph reduction experiment code and reduction function, accompanying code for 'P
 
 ```results_vis.ipnyb``` provides the code for analysing the simulation .csv files from simulations.R
 
+
+
 Note:
 - The function assumes interest in mediating processes (and so keeps all causal paths).
 - The function removes variables which might be useful for precision purposes (thus prioritising reduction in graph complexity over estimation).
 - There are a number of worked examples in the reducer.ipynb file.
 - The code has not been optimized and has only been tested on graphs with fewer than 10 nodes. 
 
+
+![](https://github.com/matthewvowels1/minSEM/blob/main/minsem_dem.png)
 
 ### Algorithm
 
