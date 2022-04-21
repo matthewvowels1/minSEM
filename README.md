@@ -8,6 +8,20 @@ Graph reduction experiment code and reduction function, accompanying code for 'P
 ```results_vis.ipnyb``` provides the code for analysing the simulation .csv files from simulations.R
 
 
+Example Usage:
+```python
+import networkx as nx
+from reducer import*
+
+g = nx.DiGraph()
+g.add_edge('t', 'y')
+g.add_edge('c', 'y')
+g.add_edge('c', 't')
+xs =['t']
+ys = ['y']
+
+rg = reducer(g, xs, ys, remove_precision=True, project_confs=True, project_causes=True)
+```
 
 Note:
 - The function assumes interest in mediating processes (and so keeps all causal paths).
