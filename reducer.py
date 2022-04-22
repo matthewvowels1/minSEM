@@ -53,8 +53,8 @@ def precision_func(remaining_nodes, xs, ys, reduced_graph, all_confounders):
 	return precision_nodes, reduced_graph
 
 
-def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_relevant_vars):
-	# this code removes confounders <and> instruments!
+def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_relevant_vars, project_causes):
+	# this code removes confounders <and> instruments! If project_causes then stop after first cause
 	# init confounder dictionary (based on causal paths from root causes)
 	confounders_dict = {}
 	k = 0
@@ -89,15 +89,18 @@ def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_r
 								confounders_dict[x].append(potential_confounder)
 								all_confounders.append(potential_confounder)
 
-		unordered_children = list(reduced_graph.successors(current_cause))
-		children = []
-		for var in ordering:
-			if var in unordered_children:
-				children.append(var)
+		if project_causes:
+			break
+		else:
+			unordered_children = list(reduced_graph.successors(current_cause))
+			children = []
+			for var in ordering:
+				if var in unordered_children:
+					children.append(var)
 
-		if len(children) > 0:
-			causal_chain[x].extend(children)
-		k += 1
+			if len(children) > 0:
+				causal_chain[x].extend(children)
+			k += 1
 
 	return all_confounders, reduced_graph, confounders_dict
 
@@ -119,6 +122,9 @@ def get_causal_vars(xs, ys, reduced_graph):
 
 
 def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_causes=True):
+	if not project_causes:
+		print('WARNING: If including mediating paths then some unneeded (but otherwise benign) confounders may remain.')
+
 	reduced_graph = graph.copy()
 	reduced_graph.remove_nodes_from(list(nx.isolates(reduced_graph)))
 
@@ -146,7 +152,7 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 
 	##### REMOVE CONFOUNDING PATHS ######
 	all_confounders, reduced_graph, confounders_dict = remove_confounders(xs, ordering, causal_chain, reduced_graph,
-	                                                    all_causally_relevant_vars)
+	                                                    all_causally_relevant_vars, project_causes)
 	all_confounders = set(all_confounders)
 	# find remaining nodes which are neither causal nor confounders (e.g. precisions and colliders)
 	remaining_nodes = non_causal_nodes - all_confounders
@@ -167,4 +173,11 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 
 	# finally clean up graph by removing isolated vars
 	reduced_graph.remove_nodes_from(list(nx.isolates(reduced_graph)))
-	return reduced_graph, confounders_dict
+
+	if len(xs) > 1:
+		print('WARNING: List of confounders is strictly valid for single cause graphs.')
+	all_confounders = set(all_confounders)
+	all_nodes = set(list(reduced_graph.nodes()))
+
+
+	return reduced_graph, all_confounders.intersection(all_nodes)
