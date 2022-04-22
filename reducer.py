@@ -56,7 +56,7 @@ def precision_func(remaining_nodes, xs, ys, reduced_graph, all_confounders):
 def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_relevant_vars):
 	# this code removes confounders <and> instruments!
 	# init confounder dictionary (based on causal paths from root causes)
-	confounders = {}
+	confounders_dict = {}
 	k = 0
 	all_confounders = []
 	some_left_flag = True
@@ -70,7 +70,7 @@ def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_r
 				some_left_flag = False
 
 			if k < 1:
-				confounders[x] = []
+				confounders_dict[x] = []
 
 			conf_vars_ = list(nx.ancestors(reduced_graph, current_cause))
 			conf_vars = []
@@ -81,12 +81,12 @@ def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_r
 
 					potential_confounder_ancs = list(nx.ancestors(reduced_graph, potential_confounder))
 					if not any(p in potential_confounder_ancs for p in all_confounders):
-						if (potential_confounder not in confounders[x]) and (
+						if (potential_confounder not in confounders_dict[x]) and (
 								potential_confounder not in all_causally_relevant_vars):
 							conf_children = list(reduced_graph.successors(potential_confounder))
 							if current_cause in conf_children:
 								reduced_graph.remove_edge(potential_confounder, current_cause)
-								confounders[x].append(potential_confounder)
+								confounders_dict[x].append(potential_confounder)
 								all_confounders.append(potential_confounder)
 
 		unordered_children = list(reduced_graph.successors(current_cause))
@@ -99,7 +99,7 @@ def remove_confounders(xs, ordering, causal_chain, reduced_graph, all_causally_r
 			causal_chain[x].extend(children)
 		k += 1
 
-	return all_confounders, reduced_graph
+	return all_confounders, reduced_graph, confounders_dict
 
 
 def get_causal_vars(xs, ys, reduced_graph):
@@ -145,7 +145,7 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 		reduced_graph = project_causes_func(xs, ys, ordering, all_causally_relevant_vars, reduced_graph)
 
 	##### REMOVE CONFOUNDING PATHS ######
-	all_confounders, reduced_graph = remove_confounders(xs, ordering, causal_chain, reduced_graph,
+	all_confounders, reduced_graph, confounders_dict = remove_confounders(xs, ordering, causal_chain, reduced_graph,
 	                                                    all_causally_relevant_vars)
 	all_confounders = set(all_confounders)
 	# find remaining nodes which are neither causal nor confounders (e.g. precisions and colliders)
@@ -167,4 +167,4 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 
 	# finally clean up graph by removing isolated vars
 	reduced_graph.remove_nodes_from(list(nx.isolates(reduced_graph)))
-	return reduced_graph
+	return reduced_graph, confounders_dict

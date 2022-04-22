@@ -65,4 +65,4 @@ For graph 'G', cause nodes 'xs', and effect nodes 'ys':
    6. delete the remaining node
 10. Repeat step 5 'project causes' again now that any superfluous confounding paths have been removed
 11. Removed isolated (completely disconnected) nodes from graph.
-12. Return reduced graph
+12. Return reduced graph and set of confounders
