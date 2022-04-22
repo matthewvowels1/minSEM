@@ -34,7 +34,11 @@ Note:
 
 ### Algorithm
 
-The algorithm in ```reducer.py``` follows roughly these steps:
+For each node in the causal chain, we check its parents and see if these parents are (a) non-causal parents, and (b) connected to any downstream causes. If they are, they are confounders.
+For the SEM graph, we therefore need to keep the confounder in the graph, but don't need to estimate the path which was used to identify it as a parent, and so this path is removed.
+We then proceed to descend through the causal ordering, finding confounders along the way.
+
+In a bit more detail, the algorithm in ```reducer.py``` follows roughly these steps:
 
 For graph 'G', cause nodes 'xs', and effect nodes 'ys':
 1. Topologically order the nodes in G
