@@ -51,7 +51,7 @@ For graph 'G', cause nodes 'xs', and effect nodes 'ys':
    2. Check if any descendents of pc are in CR [else next x]
    3. Check if we have identified pc before, <as a parent of children on the path from x>. It might have been identified as a confounder for a different var in CR, but this is not sufficient to rule it out.
    4. Remove edge from pc to x
-7. Repeat 6. but for one progression lower through the causal ordering (it keeps track of the tree of children that branches from each x in xs)
+7. if <NOT> project_causes, then Repeat 6. but for one progression lower through the causal ordering (it keeps track of the tree of children that branches from each x in xs) [else skip to 8.]
 8. if 'remove_precision' then for each remaining node in RN which are <not> in list of verified confounders and <not> in list of other non-causal nodes:
    1. check if ancestors of remaining nodes are in the list of all confounders [if yes, move to next remaining node]
    2. check if remaining node not in xs or ys [else move to next remaining node]
