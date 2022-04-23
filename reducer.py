@@ -1,6 +1,5 @@
 
 import networkx as nx
-
 def project_causes_func(xs, ys, ordering, all_causally_relevant_vars, reduced_graph):
 	to_remove = []
 	ordered_causes = ([x for x in ordering if x in all_causally_relevant_vars])
@@ -40,14 +39,15 @@ def project_confs_func(all_confounders, reduced_graph, remaining_nodes):
 	return reduced_graph
 
 
-def precision_func(remaining_nodes, xs, ys, reduced_graph, all_confounders):
+def precision_func(remaining_nodes, xs, ys, reduced_graph, all_confounders, remove_precision):
 	precision_nodes = []
 	for remaining_node in remaining_nodes:
 		# check ancestors and descendents
 		remaining_ancs = list(nx.ancestors(reduced_graph, remaining_node))
 		if any(x in remaining_ancs for x in all_confounders) == False:
 			if (remaining_node not in xs) and (remaining_node not in ys):
-				reduced_graph.remove_node(remaining_node)
+				if remove_precision:
+					reduced_graph.remove_node(remaining_node)
 				precision_nodes.append(remaining_node)
 	precision_nodes = set(precision_nodes)
 	return precision_nodes, reduced_graph
@@ -158,9 +158,8 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 	remaining_nodes = non_causal_nodes - all_confounders
 
 	##### REMOVE PRECISION VARS ######
-	if remove_precision:
-		precision_nodes, reduced_graph = precision_func(remaining_nodes, xs, ys, reduced_graph, all_confounders)
-		remaining_nodes = remaining_nodes - precision_nodes
+	precision_nodes, reduced_graph = precision_func(remaining_nodes, xs, ys, reduced_graph, all_confounders, remove_precision)
+	remaining_nodes = remaining_nodes - precision_nodes
 
 	##### PROJECT CONFOUNDING PATHS ######
 	if project_confs:
@@ -180,4 +179,4 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 	all_nodes = set(list(reduced_graph.nodes()))
 
 
-	return reduced_graph, all_confounders.intersection(all_nodes)
+	return reduced_graph, all_confounders.intersection(all_nodes), precision_nodes
