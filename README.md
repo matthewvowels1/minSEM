@@ -56,10 +56,10 @@ For graph 'G', cause nodes 'xs', and effect nodes 'ys':
    3. Check if we have identified pc before, <as a parent of children on the path from x>. It might have been identified as a confounder for a different var in CR, but this is not sufficient to rule it out.
    4. Remove edge from pc to x
 7. if <NOT> project_causes, then Repeat 6. but for one progression lower through the causal ordering (it keeps track of the tree of children that branches from each x in xs) [else skip to 8.]
-8. if 'remove_precision' then for each remaining node in RN which are <not> in list of verified confounders and <not> in list of other non-causal nodes:
+8. For each remaining node in RN which are <not> in list of verified confounders and <not> in list of other non-causal nodes:
    1. check if ancestors of remaining nodes are in the list of all confounders [if yes, move to next remaining node]
    2. check if remaining node not in xs or ys [else move to next remaining node]
-   3. remove node
+   3. if remove_precision then remove node, else just pass precisions to output of function
 9. if 'project_confs' we try to project confounding paths. 
    1. For each confounder in the list of confounders, get descendents and check if, for each remaining node in RN:
    2. check if rn is in list of confounder descendents [else move on to next rn in RN]
@@ -69,4 +69,4 @@ For graph 'G', cause nodes 'xs', and effect nodes 'ys':
    6. delete the remaining node
 10. Repeat step 5 'project causes' again now that any superfluous confounding paths have been removed
 11. Removed isolated (completely disconnected) nodes from graph.
-12. Return reduced graph and set of confounders
+12. Return reduced graph, set of confounders, and set of precision variables

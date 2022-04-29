@@ -1,5 +1,6 @@
 
 import networkx as nx
+
 def project_causes_func(xs, ys, ordering, all_causally_relevant_vars, reduced_graph):
 	to_remove = []
 	ordered_causes = ([x for x in ordering if x in all_causally_relevant_vars])
@@ -123,7 +124,16 @@ def get_causal_vars(xs, ys, reduced_graph):
 
 def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_causes=True):
 	if not project_causes:
-		print('WARNING: If including mediating paths then some unneeded (but otherwise benign) confounders may remain.')
+		print('WARNING: If including mediating paths then some unneeded (but otherwise benign) confounding paths to outcome may remain.')
+
+	has_path = 0
+	for x in xs:
+		for y in ys:
+			hp = nx.has_path(graph, x, y)
+			if hp:
+				has_path += 1
+
+	assert has_path > 0, 'No causal paths between xs and ys.'
 
 	reduced_graph = graph.copy()
 	reduced_graph.remove_nodes_from(list(nx.isolates(reduced_graph)))
@@ -139,6 +149,8 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 		reduced_graph.remove_node(var)
 
 	ordering = list(nx.topological_sort(reduced_graph))
+
+
 
 	causal_chain, all_causally_relevant_vars = get_causal_vars(xs, ys, reduced_graph)
 	# get list of all nodes
