@@ -133,7 +133,9 @@ def reducer(graph, xs, ys, remove_precision=True, project_confs=True, project_ca
 			if hp:
 				has_path += 1
 
-	assert has_path > 0, 'No causal paths between xs and ys.'
+	if has_path == 0:
+		print('WARNING: No causal paths between xs and ys, introducing direct path!')
+		graph.add_edge(xs[0], ys[0])
 
 	reduced_graph = graph.copy()
 	reduced_graph.remove_nodes_from(list(nx.isolates(reduced_graph)))
